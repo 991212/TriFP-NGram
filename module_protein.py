@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from collections import OrderedDict
 
-'''protein sequcence feature extraction module（MCNN）'''
+'''protein sequcence feature extraction module'''
 class Conv1dReLU(nn.Module):
     '''
     kernel_size=3, stride=1, padding=1
@@ -76,7 +76,7 @@ class Protein_Seq_Representation(nn.Module):
 
 
 
-'''protein k-mer feature extraction module（fully connected layer）'''
+'''protein k-mer feature extraction module'''
 class Protein_Kmer_Representation(nn.Module):
     def __init__(self,hp):
         super(Protein_Kmer_Representation, self).__init__()

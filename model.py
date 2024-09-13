@@ -49,28 +49,12 @@ class DTANet(nn.Module):
         '''drug molecule feature extraction module'''
         drug_graph_feature = self.drug_graph_encoder(data)
 
-        '''drug semantics feature extraction module'''
-        # semantics = data.smiles
-        # semantics_vectors = self.drug_semantics_embedder(semantics)
-        # drug_semantics_feature = self.drug_semantics_encoder(semantics_vectors)
-
-        # '''drug morgan fingerprint feature extraction module'''
-        # morganFP = data.morganFP
-        # drug_morganFP_feature = self.drug_morganFP_encoder(morganFP)
-
         '''Drug mixed fingerprint (MACCS、PubChem、Pharmacophore ErG) feature extraction module'''
         mixedFP = data.mixedFP
         drug_mixedFP_feature = self.drug_mixedFP_encoder(mixedFP)
 
+        drug_protein_feature = torch.cat([drug_graph_feature,drug_mixedFP_feature,protein_sequence_feature,protein_kmer_feature],dim=-1)
 
-        # drug_semantics_graph_feature = self.drug_attention(drug_semantics_feature, drug_graph_feature)
-        drug_feature = self.drug_attention(drug_graph_feature, drug_mixedFP_feature)
-        protein_feature = self.protein_attention(protein_sequence_feature,protein_kmer_feature)
-
-        # drug_protein_feature = torch.cat([drug_semantics_graph_feature,drug_mixedFP_feature,protein_sequence_feature,protein_kmer_feature],dim=-1)
-        drug_protein_feature = torch.cat([drug_feature,protein_feature],dim=-1)
-
-        # drug_protein_feature = self.drug_protein_attention(drug_feature,protein_feature)
         output = self.classifier(drug_protein_feature)
 
         return output

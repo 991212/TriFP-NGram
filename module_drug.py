@@ -132,72 +132,7 @@ class Drug_Graph_Representation(nn.Module):
 
 		return x
 
-
-'''drug semantics feature processing module(DataDTA)'''
-class ResDilaCNNBlock(nn.Module):
-	def __init__(self, dilaSize, filterSize=256, dropout=0.15, name='ResDilaCNNBlock'):
-		super(ResDilaCNNBlock, self).__init__()
-		self.layers = nn.Sequential(
-			nn.ReLU(),
-			nn.Conv1d(filterSize, filterSize, kernel_size=3, padding=dilaSize, dilation=dilaSize),
-			nn.ReLU(),
-			nn.Conv1d(filterSize, filterSize, kernel_size=3, padding=dilaSize, dilation=dilaSize),
-		)
-		self.name = name
-
-	def forward(self, x):
-		# x: batchSize × filterSize × seqLen
-		return x + self.layers(x)
-
-class Drug_Semantics_Representation(nn.Module):
-	# def __init__(self, feaSize, filterSize, blockNum=5, dropout=0.35, name='ResDilaCNNBlocks'):
-	def __init__(self, feaSize, filterSize, blockNum=5, dilaSizeList=[1, 2, 4, 8, 16], dropout=0.5,
-				 name='ResDilaCNNBlocks'):
-		super(Drug_Semantics_Representation, self).__init__()  #
-		self.blockLayers = nn.Sequential()
-		self.linear = nn.Linear(feaSize, filterSize)
-		for i in range(blockNum):
-			self.blockLayers.add_module(f"ResDilaCNNBlock{i}",
-										ResDilaCNNBlock(dilaSizeList[i % len(dilaSizeList)], filterSize,
-														dropout=dropout))
-		# self.blockLayers.add_module(f"ResDilaCNNBlock{i}", ResDilaCNNBlock(filterSize,dropout=dropout))
-		self.name = name
-		self.act = nn.ReLU()
-
-	def forward(self, x):
-		# x: batchSize × seqLen × feaSize
-		x = self.linear(x)  # => batchSize × seqLen × filterSize
-		x = self.blockLayers(x.transpose(1, 2))  # => batchSize × seqLen × filterSize
-		x = self.act(x)  # => batchSize × seqLen × filterSize
-
-		# x = self.pool(x.transpose(1, 2))
-		x = Reduce('b c t -> b c', 'max')(x)
-		return x
-
-
-'''drug morgen fingerprint feature processing module(MLP PerceiverCPI)'''
-class Drug_MorganFP_Representation(nn.Sequential):
-	def __init__(self, input_dim, output_dim, hidden_dims_lst):
-		'''
-			input_dim (int)
-			output_dim (int)
-			hidden_dims_lst (list, each element is a integer, indicating the hidden size)
-
-		'''
-		super(Drug_MorganFP_Representation, self).__init__()
-		layer_size = len(hidden_dims_lst) + 1
-		dims = [input_dim] + hidden_dims_lst + [output_dim]
-
-		self.predictor = nn.ModuleList([nn.Linear(dims[i], dims[i+1]) for i in range(layer_size)])
-
-	def forward(self, v):
-		v = v.float()
-		for i, l in enumerate(self.predictor):
-			v = F.relu(l(v))
-		return v
-
-
-'''drug mixed fingerprint feature processing module (fully connected layer) (FP-GNN)'''
+'''drug mixed fingerprint feature processing module (fully connected layer) '''
 class Drug_MixedFP_Representation(nn.Module):
 	def __init__(self,hp):
 		super(Drug_MixedFP_Representation, self).__init__()

@@ -2,7 +2,7 @@ import numpy as np
 import os
 
 
-def show_result(dataset, cv_flod, MSE_List, CI_List, R2_List, tag='0'):
+def show_result(dataset, cv_flod, MSE_List, CI_List, R2_List, time, tag='0'):
     Mse_mean, Mse_var = np.mean(MSE_List), np.var(MSE_List)
     Ci_mean, Ci_var = np.mean(CI_List), np.var(CI_List)
     R2_mean, R2_var = np.mean(R2_List), np.var(R2_List)
@@ -13,7 +13,8 @@ def show_result(dataset, cv_flod, MSE_List, CI_List, R2_List, tag='0'):
         filename = "k_models's mean results (no ensemble,each cross-validation).txt"
         file_result = os.path.join(filepath,filename)
         with open(file_result, 'a') as f:
-            f.write('No_{}_fold cross-validation:   MSE(std):{:.4f}({:.4f})   CI(std):{:.4f}({:.4f})   R2(std):{:.4f}({:.4f})'.format(cv_flod+1, Mse_mean, Mse_var, Ci_mean, Ci_var, R2_mean, R2_var) + '\n' + '\n')
+            f.write(
+                f'No_{cv_flod+1}_fold cross-validation:   MSE(std):{Mse_mean:.4f}({Mse_var:.4f})   CI(std):{Ci_mean:.4f}({Ci_var:.4f})   R2(std):{R2_mean:.4f}({R2_var:.4f})   run_time:{time}\n\n')
 
     elif tag == '1':
         print("No_{}_fold cross-validation, ensemble model's results:".format(cv_flod + 1))

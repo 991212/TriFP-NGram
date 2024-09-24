@@ -7,7 +7,6 @@ class hyperparameter():
         self.epoch = 10000
         self.weight_decay = 1e-4
         self.patience = 50
-        # self.drug_seq_feature = 'Morgen_fp'  #['mixed_fp','semantics']
 
         self.embedding_size = 128
         self.filter_num = 32

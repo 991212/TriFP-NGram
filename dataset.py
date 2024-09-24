@@ -43,17 +43,17 @@ class GNNDataset(InMemoryDataset):
 
         return train_val_folds
 
-    def split_train_val_fold_with_rate(self, train_set_rate = 0.8, random_state=1212):
-        # 获取所有索引
-        indices = np.arange(len(self))
-        # 划分训练集和验证集的索引
-        train_indices, val_indices = train_test_split(indices, train_size=train_set_rate, random_state=random_state, shuffle=True)
-        
-        # 创建训练集和验证集的子集
-        train_fold = Subset(self, train_indices)
-        val_fold = Subset(self, val_indices)
-        
-        return [(train_fold, val_fold)]
+    # def split_train_val_fold_with_rate(self, train_set_rate = 0.8, random_state=1212):
+    #     # 获取所有索引
+    #     indices = np.arange(len(self))
+    #     # 划分训练集和验证集的索引
+    #     train_indices, val_indices = train_test_split(indices, train_size=train_set_rate, random_state=random_state, shuffle=True)
+    #
+    #     # 创建训练集和验证集的子集
+    #     train_fold = Subset(self, train_indices)
+    #     val_fold = Subset(self, val_indices)
+    #
+    #     return [(train_fold, val_fold)]
 
 if __name__ == "__main__":
     # dataset = GNNDataset('data.csv/davis')

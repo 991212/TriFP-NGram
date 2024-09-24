@@ -337,16 +337,13 @@ class GNNDataset(InMemoryDataset):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-
-    parser.add_argument('dataSetName', choices=["EC50", "IC50", "Ki", "Kd", "kiba"],help='Enter which dataset to use for the experiment')
+    parser.add_argument('dataSetName', choices=["EC50", "IC50", "Ki", "Kd", "Kiba","Davis"],help='Enter which dataset to use for the experiment')
     parser.add_argument('-cv_f', '--cross_validation_fold', type=int, default=5, help='Set the K-Fold number, the default is 5')
     args = parser.parse_args()
 
     dataset = args.dataSetName
     cross_validation_fold = args.cross_validation_fold
 
-    '''load dataset from text file'''
-    assert dataset in ["EC50", "IC50", "Ki", "Kd"]
     print(f"Loading {dataset} data...")
 
     '''reading data'''

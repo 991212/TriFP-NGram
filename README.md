@@ -2,7 +2,7 @@
 
 ## Model Architecture 
 
-![model](E:\TriFP-NGram\image\model.png)
+![model](./image/model.png)
 
 ## Requirements
 
